@@ -3,6 +3,7 @@ import toast from 'react-hot-toast';
 import ACTIONS from '../Actions';
 import Client from '../components/Client';
 import Editor from '../components/Editor';
+import Camera from '../components/Camera';
 import { initSocket } from '../socket';
 import {
     useLocation,
@@ -18,6 +19,7 @@ const EditorPage = () => {
     const { roomId } = useParams();
     const reactNavigator = useNavigate();
     const [clients, setClients] = useState([]);
+    const [remoteStreams, setRemoteStreams] = useState([]);
 
     useEffect(() => {
         const init = async () => {
@@ -64,12 +66,18 @@ const EditorPage = () => {
                     });
                 }
             );
+
+            // Listening for remote streams
+            socketRef.current.on(ACTIONS.REMOTE_STREAM, (stream) => {
+                setRemoteStreams((prev) => [...prev, stream]);
+            });
         };
         init();
         return () => {
             socketRef.current.disconnect();
             socketRef.current.off(ACTIONS.JOINED);
             socketRef.current.off(ACTIONS.DISCONNECTED);
+            socketRef.current.off(ACTIONS.REMOTE_STREAM);
         };
     }, []);
 
@@ -120,6 +128,7 @@ const EditorPage = () => {
                 </button>
             </div>
             <div className="editorWrap">
+                <Camera />
                 <Editor
                     socketRef={socketRef}
                     roomId={roomId}
@@ -127,6 +136,9 @@ const EditorPage = () => {
                         codeRef.current = code;
                     }}
                 />
+                {remoteStreams.map((stream, index) => (
+                    <video key={index} autoPlay playsInline />
+                ))}
             </div>
         </div>
     );

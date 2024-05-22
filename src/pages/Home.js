@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { v4 as uuidV4 } from 'uuid';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import Camera from '../components/Camera'; // Import the updated Camera component
 
 const Home = () => {
     const navigate = useNavigate();
-
     const [roomId, setRoomId] = useState('');
     const [username, setUsername] = useState('');
+
     const createNewRoom = (e) => {
         e.preventDefault();
         const id = uuidV4();
@@ -34,14 +35,18 @@ const Home = () => {
             joinRoom();
         }
     };
+
     return (
         <div className="homePageWrapper">
             <div className="formWrapper">
-                <img
-                    className="homePageLogo"
-                    src="/code-sync.png"
-                    alt="code-sync-logo"
-                />
+                <div className="logoAndCameraWrapper">
+                    <img
+                        className="homePageLogo"
+                        src="/code-sync.png"
+                        alt="code-sync-logo"
+                    />
+                    <Camera /> {/* Render the updated Camera component */}
+                </div>
                 <h4 className="mainLabel">Paste invitation ROOM ID</h4>
                 <div className="inputGroup">
                     <input
@@ -63,6 +68,7 @@ const Home = () => {
                     <button className="btn joinBtn" onClick={joinRoom}>
                         Join
                     </button>
+                    
                     <span className="createInfo">
                         If you don't have an invite then create &nbsp;
                         <a
@@ -78,7 +84,7 @@ const Home = () => {
             <footer>
                 <h4>
                     Built with 💛 &nbsp; by &nbsp;
-                    <a href="https://github.com/codersgyan">Coder's Gyan</a>
+                    <a href="https://github.com/1Alisha">Alisha Gupta</a>
                 </h4>
             </footer>
         </div>
